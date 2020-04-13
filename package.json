@@ -1,0 +1,22 @@
+{
+  "name": "decentralized-trust-demo",
+  "version": "0.0.1",
+  "description": "Demo of decentralized trust ",
+  "main": "server.js",
+  "scripts": {
+    "start": "npx webpack --silent && node dist/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "decentralization",
+    "decentralized",
+    "trust"
+  ],
+  "author": "Tim Robinson <tim@timjrobinson.com>",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  }
+}
