@@ -17,7 +17,6 @@ class CalculatedTrust {
 
   addRating(rating) {
     if (this.fixed) return;
-    console.log("Adding rating: ", rating);
 
     if (this.totalRatings === 0) {
       this.rating = rating;
@@ -33,7 +32,9 @@ class CalculatedTrust {
 
 class User {
   constructor(name) {
-    this.id = name + Math.floor(Math.random() * 100000000);
+    name = name || '';
+    const randomString = Math.random().toString(36).substring(2);
+    this.id = name + randomString;
     this.trustedUsers = {}; // Hashmap of userId -> Trust for each trusted user
     this.calculatedTrust = {};
   }
