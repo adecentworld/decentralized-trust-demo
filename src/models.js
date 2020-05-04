@@ -1,6 +1,10 @@
 const MIN_TRUST = -100;
 const MAX_TRUST = 100;
 
+function generateRandomString(length) {
+  return Math.random().toString(36).substring(2, length)
+}
+
 class Trust {
   constructor(user, rating) {
     this.user = user;
@@ -31,12 +35,21 @@ class CalculatedTrust {
 }
 
 class User {
-  constructor(name) {
-    name = name || '';
-    const randomString = Math.random().toString(36).substring(2);
-    this.id = name + randomString;
+  constructor(id) {
+    this.id = id || generateRandomString();
     this.trustedUsers = {}; // Hashmap of userId -> Trust for each trusted user
     this.calculatedTrust = {};
+  }
+
+  serialize() {
+    const serializedTrust = Object.entries(this.trustedUsers).map(([id, trust]) => {
+      return { id, rating: trust.rating }
+    });
+    const serialized = {
+      id: this.id,
+      trustedUsers: serializedTrust
+    }
+    return serialized;
   }
 
   trustUser(user, rating) {
@@ -72,4 +85,4 @@ class User {
 
 }
 
-export {Trust, User};
+module.exports = {Trust, User};

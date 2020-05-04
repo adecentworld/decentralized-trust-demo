@@ -1,73 +1,24 @@
-import {User, Trust} from './src/models';
-import assert from 'assert';
+const util = require("util");
+const Koa = require("koa");
+const json = require("koa-json");
+const Router = require("koa-router");
+const static = require("koa-static");
+const open = require("open");
 
-const a = new User('a');
-const b = new User('b');
-const c = new User('c');
-const d = new User('d');
+const World = require("./src/world");
 
-a.trustUser(b, 50);
-b.trustUser(c, 25);
+const app = new Koa();
+const router = new Router();
+const world = new World();
 
-let trustLevels = a.recalculateTrust();
-console.log("Trust Levels: ", trustLevels);
-assert.equal(trustLevels[c.id], Math.sqrt(50 * 25));
+const PORT = process.env.PORT || 5000;
+const HOST = process.env.HOST || "localhost";
 
-console.log("---------");
+app.use(static('dist'))
+app.listen(PORT);
 
-a.trustUser(b, 50);
-b.trustUser(d, 30);
-a.trustUser(c, 10);
-c.trustUser(d, 25);
+const url = `http://${HOST}:${PORT}`;
 
-trustLevels = a.recalculateTrust();
-console.log("Trust Levels: ", trustLevels);
-
-const ABxBD = Math.sqrt(50 * 30);
-const ACxCD = Math.sqrt(10 * 25);
-assert.equal(trustLevels[d.id], (ABxBD + ACxCD) / 2);
-
-
-// Doing some speed tests
-const totalUsers = 100000;
-const edgesPerUser = 100;
-const totalEdges = totalUsers * edgesPerUser;
-const totalTests = 10;
-
-console.log("Creating users...");
-
-const users = {};
-for (let i = 0; i < totalUsers; i++) {
-  let user = new User();
-  users[i] = user;
-}
-
-console.log(`Done generating ${totalUsers} users`);
-console.log("Creating edges");
-
-for (let j = 0; j < totalEdges; j++) {
-  let userFromNum = Math.floor(Math.random() * totalUsers);
-  let userToNum = Math.floor(Math.random() * totalUsers);
-  if (userFromNum == userToNum) {
-    continue;
-  }
-  let rating = Math.floor(Math.random() * 200) - 100;
-  users[userFromNum].trustUser(users[userToNum], rating);
-}
-
-console.log(`Done generating ${totalEdges} edges`);
-console.log("Running speed tests on random users");
-
-for (let k = 0; k < totalTests; k++) {
-  let testUserNum = Math.floor(Math.random() * totalUsers);
-  let user = users[testUserNum];
-  let startTime = Date.now();
-  let trustLevels = user.recalculateTrust();
-  let totalTime = Date.now() - startTime;
-  console.log(`Calculated trust levels for user: ${user.id} in ${totalTime} ms.`)
-  console.log(`Total calculated trusted users: ${Object.keys(trustLevels).length}`)
-  // console.log("Trust levels are: ", trustLevels);
-}
-
-
-
+console.log(`Trust demo started on port ${PORT}`);
+console.log(`Opening ${url} in your browser now...`);
+open(url);
