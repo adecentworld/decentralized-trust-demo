@@ -2,50 +2,22 @@ const cytoscape = require('cytoscape');
 const models = require("./models");
 const World = require("./world");
 
-const TOTAL_USERS = 100;
-const TOTAL_EDGES = 1000;
+const TOTAL_USERS = 30;
+const TOTAL_EDGES = 100;
 
 // const app = new PIXI.Application();
 const world = new World();
 const canvas = document.getElementById("cy");
-// const renderer = PIXI.autoDetectRenderer({
-//   width: 1024, 
-//   height: 767, 
-//   view: canvas,
-//   backgroundColor: 0xFFFFFF,
-// });
 
-
-function createUserGraphics(users) {
-  const graphics = new PIXI.Graphics();
-
-  let xPos = 10;
-  let yPos = 10;
-  Object.entries(users).forEach(([id, user]) => {
-    const person = PIXI.Sprite.from("assets/img/person.jpeg");
-    person.anchor.set(0.5);
-    person.x = xPos;
-    person.y = yPos;
-    person.interactive = true;
-    person.buttonMode = true;
-    person.on('pointerdown', () => {
-      person.x = app.screen.width / 2;
-      person.y = app.screen.width / 2;
-    });
-
-
-    app.stage.addChild(person);
-    xPos += 30;
-    if (xPos > 1000) {
-      xPos = 10;
-      yPos += 30;
-    }
+function createUsersHashMap(users) {
+  const usersMap = {};
+  users.forEach((user) => {
+    usersMap[user.id] = user;
   });
+  return usersMap;
 }
 
-
-
-function convertUsersToGraphElements(users) {
+function convertUsersToGraphElements(users, rootUser) {
   const graphElements = {
     nodes: [],
     edges: []
@@ -64,23 +36,8 @@ function convertUsersToGraphElements(users) {
 }
 
 function createGraph(users) {
+  const usersMap = createUsersHashMap(users);
   const graphElements = convertUsersToGraphElements(users);
-  // const graphElements = {
-  //   nodes: [
-  //     {
-  //       data: { id: 'a' }
-  //     },
-
-  //     {
-  //       data: { id: 'b' }
-  //     }
-  //   ],
-  //   edges: [
-  //     {
-  //       data: { id: 'ab', source: 'a', target: 'b' }
-  //     }
-  //   ]
-  // };
   const graphStyle = [
     {
       selector: 'node',
@@ -118,60 +75,45 @@ function createGraph(users) {
   console.log("Graph elements", graphElements);
 
 
-  var cy = cytoscape({
+  const cy = cytoscape({
     container: canvas,
     elements: graphElements,
     style: graphStyle,
     layout: graphLayout
   });
+
+  cy.on('tap', 'node', function(evt){
+    var node = evt.target;
+    console.log( 'tapped ' + node.id() );
+    const userId = node.id();
+    const user = usersMap[userId];
+    const trustLevels = user.recalculateTrust();
+    console.log("Trust levels: ", trustLevels);
+    Object.keys(usersMap).forEach((userId) => {
+      cy.getElementById(userId).style('background-color', '#aaaaaa');
+    });
+    Object.entries(trustLevels).forEach(([userId, trustLevel]) => {
+      let style = "#";
+      if (trustLevel < 0) {
+        style += (255).toString(16);
+        style += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // G
+        style += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // B
+      } else {
+        style += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // R
+        style += (255).toString(16);
+        style += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // B
+      }
+      console.log("Trust level: ", trustLevel, " style: ", style);
+      cy.getElementById(userId).style('background-color', style)
+
+    });
+  });
 }
 
 async function createWorld() {
   const users = await world.generate(TOTAL_USERS, TOTAL_EDGES);
-  createGraph(users);
+  const rootUser = users[0];
+  createGraph(users, rootUser);
 }
 
 createWorld();
-// var cy = cytoscape({
-
-//   container: document.getElementById('cy'), // container to render in
-
-//   elements: [ // list of graph elements to start with
-//     { // node a
-//       data: { id: 'a' }
-//     },
-//     { // node b
-//       data: { id: 'b' }
-//     },
-//     { // edge ab
-//       data: { id: 'ab', source: 'a', target: 'b' }
-//     }
-//   ],
-
-//   style: [ // the stylesheet for the graph
-//     {
-//       selector: 'node',
-//       style: {
-//         'background-color': '#666',
-//         'label': 'data(id)'
-//       }
-//     },
-
-//     {
-//       selector: 'edge',
-//       style: {
-//         'width': 3,
-//         'line-color': '#ccc',
-//         'target-arrow-color': '#ccc',
-//         'target-arrow-shape': 'triangle',
-//         'curve-style': 'bezier'
-//       }
-//     }
-//   ],
-
-//   layout: {
-//     name: 'grid',
-//     rows: 1
-//   }
-
-// });
