@@ -57,6 +57,20 @@ class User {
   }
 
   /**
+   * Gets the trust ratings of all users this user has rated. 
+   * No calculated trust levels are included, only the ratings the user has set. 
+   * Returns a hashmap of all users with the set integer rating of each. 
+   */
+  getTrustRatings() {
+    const trustRatings = {};
+    Object.entries(this.trustedUsers).forEach(([id, trust]) => {
+      trustRatings[id] = trust.rating;
+    });
+
+    return trustRatings;
+  }
+
+  /**
    * Calculates the trust levels from this user to all other users. 
    * Returns a hashmap of all users with calculated trust ratings for each. 
    */
@@ -74,16 +88,21 @@ class User {
       });
     });
 
-    return this.getTrustValues();
+    return this.getTrustLevels();
   }
 
-  getTrustValues() {
-    const trustValues = {};
+  /**
+   * Gets all calculated trust levels from this user to other users.
+   * These are the calculated trust levels, and will be to other users that this
+   * user may have never rated becuase the trust was calculated from friends of friends. 
+   */
+  getTrustLevels() {
+    const trustLevels = {};
     Object.entries(this.calculatedTrust).forEach(([id, trust]) => {
-      trustValues[id] = trust.rating;
+      trustLevels[id] = trust.rating;
     });
 
-    return trustValues;
+    return trustLevels;
   }
 
 
