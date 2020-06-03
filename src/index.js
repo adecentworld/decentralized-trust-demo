@@ -3,7 +3,7 @@ const models = require("./models");
 const World = require("./world");
 
 const TOTAL_USERS = 30;
-const TOTAL_EDGES = 100;
+const TOTAL_EDGES = 150;
 
 const world = new World();
 const canvas = document.getElementById("cy");
@@ -41,6 +41,8 @@ function convertUsersToGraphElements(users, rootUser) {
   return graphElements;
 }
 
+function pad(num, size){ return ('000000000' + num).substr(-size); }
+
 /** Returns an appropriate color for a trust rating
  * -100 = Dark Red
  * -50 = Light Red
@@ -52,12 +54,12 @@ function getHexColorForTrustLevel(trustLevel) {
   let hexColorString = "#";
   if (trustLevel < 0) {
     hexColorString += (255).toString(16);
-    hexColorString += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // G
-    hexColorString += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // B
+    hexColorString += pad(Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16), 2); // G
+    hexColorString += pad(Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16), 2); // B
   } else {
-    hexColorString += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // R
+    hexColorString += pad(Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16), 2); // R
     hexColorString += (255).toString(16);
-    hexColorString += Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16); // B
+    hexColorString += pad(Math.floor(255 - Math.abs(trustLevel) / 100 * 255).toString(16), 2); // B
   }
 
   return hexColorString;
@@ -71,7 +73,8 @@ function createGraph(users) {
       selector: 'node',
       style: {
         'background-color': '#666',
-        'label': 'data(id)'
+        'label': 'data(id)',
+        'font-size': '10px',
       }
     },
     {
@@ -121,18 +124,46 @@ function createGraph(users) {
       cy.getElementById(userId).style('background-color', '#aaaaaa');
     });
 
+    cy.edges().style({visibility: 'hidden'});
+
     // Set node circle positions based on location 
     cy.getElementById(userId).data('trustDegree', 4);
-    Object.keys(trustRatings).forEach((userId) => {
-      if (cy.getElementById(userId).data('trustDegree') != 1) return;
-      cy.getElementById(userId).data('trustDegree', 3);
+    Object.entries(trustRatings).forEach(([friendId, trustRating]) => {
+      if (cy.getElementById(friendId).data('trustDegree') < 3) {
+        cy.getElementById(friendId).data('trustDegree', 3);
+      }
+      const edgeId = userId + friendId;
+
+      console.log("Getting line color for friend ", friendId, " trust rating ", trustRating);
+      const color = getHexColorForTrustLevel(trustRating);
+      cy.getElementById(edgeId).style({
+        visibility: 'visible',
+        lineColor: color,
+        targetArrowColor: color,
+      });
+
       // Friends of Friends
-      const friend = usersMap[userId];
-      console.log("Friend of userId ", userId, " is : ", friend)
+      if (trustRating < 0) return; // Don't show lines to friends of untrusted people
+      const friend = usersMap[friendId];
+      console.log("Friend of userId ", friendId, " is : ", friend)
       const friendsTrustRatings = friend.getTrustRatings();
-      Object.keys(friendsTrustRatings).forEach((userId) => {
-        if (cy.getElementById(userId).data('trustDegree') != 1) return;
-        cy.getElementById(userId).data('trustDegree', 2);
+      Object.entries(friendsTrustRatings).forEach(([friendOfFriendId, trustRating]) => {
+        if (friendOfFriendId == userId) return; // Don't show links back to main user
+        if (trustRatings[friendOfFriendId] != null) {
+          // Don't show links to immediate friends of user as these are fixed ratings. 
+          return;
+        }
+
+        cy.getElementById(friendOfFriendId).data('trustDegree', 2);
+
+        const edgeId = friendId + friendOfFriendId;
+        console.log("Getting line color for friend ", friendId, " friend of friend ", friendOfFriendId, " trust rating ", trustRating);
+        const color = getHexColorForTrustLevel(trustRating);
+        cy.getElementById(edgeId).style({
+          visibility: 'visible',
+          lineColor: color,
+          targetArrowColor: color,
+        });
       });
     });
 
@@ -140,7 +171,7 @@ function createGraph(users) {
     const trustLevels = user.recalculateTrust();
     console.log("Trust levels: ", trustLevels);
     Object.entries(trustLevels).forEach(([userId, trustLevel]) => {
-      let backgroundColor = getHexColorForTrustLevel(trustLevel);
+      const backgroundColor = getHexColorForTrustLevel(trustLevel);
       console.log("Trust level: ", trustLevel, " color: ", backgroundColor);
       cy.getElementById(userId).style('background-color', backgroundColor)
     });
@@ -154,7 +185,10 @@ function createGraph(users) {
       },
       levelWidth: function(nodes) {
         return 1;
-      }
+      },
+      animate: true,
+      spacingFactor: 1,
+      nodeDimensionsIncludeLabels: true
     });
     // const layout = cy.elements().layout({
     //   name: "random"

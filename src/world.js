@@ -1,3 +1,4 @@
+const rn = require("node-random-name");
 const models = require("./models");
 const User = models.User;
 
@@ -8,8 +9,9 @@ class World {
 
     const users = [];
     for (let i = 0; i < totalUsers; i++) {
-      let user = new User();
+      let user = new User(rn({seed: Math.random()}));
       users[i] = user;
+      console.log("Created user: ", user.id);
     }
 
     console.log(`Done generating ${totalUsers} users`);

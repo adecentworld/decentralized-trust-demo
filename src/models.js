@@ -2,7 +2,7 @@ const MIN_TRUST = -100;
 const MAX_TRUST = 100;
 
 function generateRandomString(length) {
-  return Math.random().toString(36).substring(2, length)
+  return Math.random().toString(36).substring(2, length + 2)
 }
 
 class Trust {
@@ -36,7 +36,7 @@ class CalculatedTrust {
 
 class User {
   constructor(id) {
-    this.id = id || generateRandomString();
+    this.id = id || generateRandomString(4);
     this.trustedUsers = {}; // Hashmap of userId -> Trust for each trusted user
     this.calculatedTrust = {};
   }
@@ -81,9 +81,14 @@ class User {
       this.calculatedTrust[userId] = new CalculatedTrust(trust.rating);
     });
     Object.entries(this.trustedUsers).forEach(([userId, trust]) => {
+      console.log("Calculating trust for user ", userId, " trust is: ", trust.rating);
+      if (trust.rating < 0) return;
       Object.entries(trust.user.trustedUsers).forEach(([otherId, otherTrust]) => {
+        if (otherId == this.id) return;
         this.calculatedTrust[otherId] = this.calculatedTrust[otherId] || new CalculatedTrust();
-        const otherRating = Math.sqrt(Math.abs(trust.rating * otherTrust.rating))
+        let otherRating = Math.sqrt(Math.abs(trust.rating * otherTrust.rating)); 
+        if (otherTrust.rating < 0) otherRating = -otherRating;
+        console.log("Calculating trust for other user ", otherId, " fr: ", trust.rating, "sr: ", otherTrust.rating, " trust is: ", otherRating);
         this.calculatedTrust[otherId].addRating(otherRating);
       });
     });
