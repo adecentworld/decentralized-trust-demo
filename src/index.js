@@ -168,7 +168,7 @@ function createGraph(users) {
     });
 
     // Set colors based on Trust Levels
-    const trustLevels = user.recalculateTrust();
+    const trustLevels = user.calculateTrust();
     console.log("Trust levels: ", trustLevels);
     Object.entries(trustLevels).forEach(([userId, trustLevel]) => {
       const backgroundColor = getHexColorForTrustLevel(trustLevel);

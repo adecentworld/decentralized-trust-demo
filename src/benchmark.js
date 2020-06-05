@@ -33,7 +33,7 @@ const bench = new Benchmark('Calculate Trust',
   function() {
     const testUserNum = Math.floor(Math.random() * totalUsers);
     const user = users[testUserNum];
-    user.recalculateTrust();
+    user.calculateTrust();
   }
 );
 

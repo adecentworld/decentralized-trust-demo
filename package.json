@@ -1,11 +1,11 @@
 {
   "name": "decentralized-trust-demo",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Demo of decentralized trust ",
   "main": "server.js",
   "scripts": {
     "start": "npx webpack --silent && node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npx mocha",
     "benchmark": "node benchmark.js"
   },
   "keywords": [
@@ -23,10 +23,10 @@
     "koa-router": "^8.0.8",
     "koa-static": "^5.0.0",
     "node-random-name": "^1.0.1",
-    "open": "^7.0.3",
-    "pixi.js": "^5.2.2"
+    "open": "^7.0.3"
   },
   "devDependencies": {
+    "mocha": "^7.2.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11"
   }

@@ -75,7 +75,7 @@ class User {
    * Returns a hashmap of all users with calculated trust ratings for each. 
    */
 
-  recalculateTrust() {
+  calculateTrust() {
     this.calculatedTrust = {}; // Hashmap of userId -> CalculatedTrust
     Object.entries(this.trustedUsers).forEach(([userId, trust]) => {
       this.calculatedTrust[userId] = new CalculatedTrust(trust.rating);
