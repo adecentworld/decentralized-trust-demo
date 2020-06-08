@@ -89,16 +89,7 @@ function createGraph(users) {
     }
   ];
   const graphLayout = {
-    name: 'concentric',
-    concentric: function( node ){
-      console.log("Node: ", node.id(), " Trust Degree: ", node.data('trustDegree'), " Degree: ", node.degree());
-      console.log("All node settings: ", node);
-
-      return node.degree();
-    },
-    levelWidth: function( nodes ){
-      return 2;
-    }
+    name: 'random',
   };
   console.log("Canvas: ", canvas);
   console.log("Graph elements", graphElements);
@@ -168,7 +159,8 @@ function createGraph(users) {
     });
 
     // Set colors based on Trust Levels
-    const trustLevels = user.calculateTrust();
+    user.calculateTrust();
+    const trustLevels = user.getTrustLevels();
     console.log("Trust levels: ", trustLevels);
     Object.entries(trustLevels).forEach(([userId, trustLevel]) => {
       const backgroundColor = getHexColorForTrustLevel(trustLevel);

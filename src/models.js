@@ -1,5 +1,6 @@
 const MIN_TRUST = -100;
 const MAX_TRUST = 100;
+const DEFAULT_DEPTH = 3;
 
 function generateRandomString(length) {
   return Math.random().toString(36).substring(2, length + 2)
@@ -53,6 +54,7 @@ class User {
   }
 
   trustUser(user, rating) {
+    if (user.id == this.id) throw new TypeError("Cannot trust self");
     this.trustedUsers[user.id] = new Trust(user, rating);
   }
 
@@ -72,28 +74,38 @@ class User {
 
   /**
    * Calculates the trust levels from this user to all other users. 
-   * Returns a hashmap of all users with calculated trust ratings for each. 
+   * Returns a hashmap of userId -> CalculatedTrust for each user. 
    */
 
-  calculateTrust() {
+  calculateTrust(depth) {
+    if (depth == null) {
+      depth = DEFAULT_DEPTH;
+    }
     this.calculatedTrust = {}; // Hashmap of userId -> CalculatedTrust
+
+    // Set fixed trust ratings for all users in this.trustedUsers
     Object.entries(this.trustedUsers).forEach(([userId, trust]) => {
       this.calculatedTrust[userId] = new CalculatedTrust(trust.rating);
     });
+    // We've gone as deep as we'd like to calculate, just return this users trust ratings of others. 
+    if (depth == 0) {
+      return this.calculatedTrust;
+    }
     Object.entries(this.trustedUsers).forEach(([userId, trust]) => {
-      console.log("Calculating trust for user ", userId, " trust is: ", trust.rating);
+      // Ignore futher trust ratings from people we distrust
       if (trust.rating < 0) return;
-      Object.entries(trust.user.trustedUsers).forEach(([otherId, otherTrust]) => {
-        if (otherId == this.id) return;
+      const trustLevels = trust.user.calculateTrust(depth-1);
+      Object.entries(trustLevels).forEach(([otherId, otherTrust]) => {
+        // Ignore trust from this user to us. 
+        if (otherId == this.id) return; 
         this.calculatedTrust[otherId] = this.calculatedTrust[otherId] || new CalculatedTrust();
         let otherRating = Math.sqrt(Math.abs(trust.rating * otherTrust.rating)); 
         if (otherTrust.rating < 0) otherRating = -otherRating;
-        console.log("Calculating trust for other user ", otherId, " fr: ", trust.rating, "sr: ", otherTrust.rating, " trust is: ", otherRating);
         this.calculatedTrust[otherId].addRating(otherRating);
       });
     });
 
-    return this.getTrustLevels();
+    return this.calculatedTrust;
   }
 
   /**
