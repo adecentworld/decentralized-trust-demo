@@ -106,9 +106,6 @@ function createGraph(users) {
   const graphLayout = {
     name: 'random',
   };
-  // console.log("Canvas: ", canvas);
-  // console.log("Graph elements", graphElements);
-
 
   cy = cytoscape({
     container: canvas,
@@ -129,7 +126,6 @@ function createGraph(users) {
 
 
 function resetGraph() {
-  // Reset nodes to default colors / positions
   Object.keys(usersMap).forEach((userId) => {
     cy.getElementById(userId).data('trustDegree', 0);
     cy.getElementById(userId).style('background-color', '#aaaaaa');
@@ -146,7 +142,6 @@ function renderTrustedUsers(user, depth) {
     }
     const edgeId = user.id + friendId;
 
-    // console.log("Getting line color for friend ", friendId, " trust rating ", trustRating);
     const color = getHexColorForTrustLevel(trustRating);
     cy.getElementById(edgeId).style({
       visibility: 'visible',
@@ -154,7 +149,6 @@ function renderTrustedUsers(user, depth) {
       targetArrowColor: color,
     });
 
-    // Friends of Friends
     if (trustRating < 0) return; // Don't show lines to friends of untrusted people
     if (depth <= 1) return; // We've gone as deep as we need to go, so return
 
@@ -176,25 +170,20 @@ function renderGraph(user) {
 
   // Set colors based on Trust Levels
   const trustLevels = user.getTrustLevels();
-  // console.log("Trust levels: ", trustLevels);
   Object.entries(trustLevels).forEach(([userId, trustLevel]) => {
     const backgroundColor = getHexColorForTrustLevel(trustLevel);
-    // console.log("Trust level: ", trustLevel, " color: ", backgroundColor);
     cy.getElementById(userId).style('background-color', backgroundColor)
   });
 
-  // TODO - Change the graph layout to have selected node in the center, friends around, friends of friends around that etc. 
   const layout = cy.elements().layout({
     name: 'concentric',
     concentric: function(node) {
-      // console.log("Node: ", node.id(), " Trust Degree: ", node.data('trustDegree'));
       return node.data('trustDegree');
     },
     levelWidth: function(nodes) {
       return 1;
     },
     animate: true,
-    spacingFactor: 1,
     nodeDimensionsIncludeLabels: true
   });
   layout.run();
@@ -217,10 +206,9 @@ async function createWorld(totalUsers, totalRatings, trustDepth) {
 }
 
 createWorld(totalUsers, totalRatings, trustDepth);
-const updateWorld = debounce(createWorld, 1000);
+const updateWorld = debounce(createWorld, 250);
 
 const usersSlider = new Slider({
-  // Set the value for slider
   min: 5,
   max: 50,
   value: DEFAULT_TOTAL_USERS,
@@ -237,7 +225,6 @@ const usersSlider = new Slider({
 usersSlider.appendTo('#users-slider');
 
 const ratingsSlider = new Slider({
-  // Set the value for slider
   min: 1,
   max: 10,
   value: DEFAULT_RATINGS_PER_USER,
@@ -254,7 +241,6 @@ const ratingsSlider = new Slider({
 ratingsSlider.appendTo('#edges-slider');
 
 const trustDepthSlider = new Slider({
-  // Set the value for slider
   min: 1,
   max: 6,
   value: DEFAULT_TRUST_DEPTH,
