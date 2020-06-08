@@ -21,4 +21,4 @@ const url = `http://${HOST}:${PORT}`;
 
 console.log(`Trust demo started on port ${PORT}`);
 console.log(`Opening ${url} in your browser now...`);
-// open(url);
+open(url);

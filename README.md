@@ -17,9 +17,15 @@ You can use the sliders to choose how many users are in the simulation, how many
 
 ## Usage
 
-`npm start` - Start the trust demo. This will launch it in your browser.
+Requires NodeJS >= 12.
 
-`npm test` - Run the test suite.
+```sh
+npm install
+npm start
+```
+
+- `npm start` - Start the trust demo. This will automatically open it in your browser.
+- `npm test` - Run the test suite.
 
 ## Algorithm
 
