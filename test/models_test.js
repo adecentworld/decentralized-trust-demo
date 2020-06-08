@@ -1,7 +1,8 @@
+const t = require("tap");
 const assert = require("assert");
 const {Trust, User} = require("../src/models");
 
-it("Should calculate trust for a single friend of friend correctly", () => {
+t.test("Should calculate trust for a single friend of friend correctly", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -11,9 +12,10 @@ it("Should calculate trust for a single friend of friend correctly", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, Math.sqrt(50 * 30));
+  t.end();
 });
 
-it("Should calculate trust for multiple friends trusting a stranger correctly", () => {
+t.test("Should calculate trust for multiple friends trusting a stranger correctly", (t) => {
   const user = new User();
   const friend1 = new User();
   const friend2 = new User();
@@ -28,9 +30,10 @@ it("Should calculate trust for multiple friends trusting a stranger correctly", 
   const expectedTrustFriend1 = Math.sqrt(50 * 30);
   const expectedTrustFriend2 = Math.sqrt(20 * 80);
   assert.equal(trustLevels[stranger.id].rating, (expectedTrustFriend1 + expectedTrustFriend2) / 2);
+  t.end();
 });
 
-it("Should calculate trust 3 levels deep correctly", () => {
+t.test("Should calculate trust 3 levels deep correctly", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -42,9 +45,10 @@ it("Should calculate trust 3 levels deep correctly", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger2.id].rating, Math.sqrt(50 * Math.sqrt(30 * 20)));
+  t.end();
 });
 
-it("Should give negative ratings to strangers that friends distrust", () => {
+t.test("Should give negative ratings to strangers that friends distrust", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -54,9 +58,10 @@ it("Should give negative ratings to strangers that friends distrust", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, -Math.sqrt(70 * 35));
+  t.end();
 });
 
-it("Should ignore all ratings from untrusted people", () => {
+t.test("Should ignore all ratings from untrusted people", (t) => {
   const user = new User();
   const friend = new User();
   const enemy = new User();
@@ -69,9 +74,10 @@ it("Should ignore all ratings from untrusted people", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, -Math.sqrt(70 * 10));
+  t.end();
 });
 
-it("Should use fixed trust when available", () => {
+t.test("Should use fixed trust when available", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -82,9 +88,10 @@ it("Should use fixed trust when available", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, 20);
+  t.end();
 });
 
-it("Should not cause a loop if the person we trust trusts us", () => {
+t.test("Should not cause a loop if the person we trust trusts us", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -95,9 +102,10 @@ it("Should not cause a loop if the person we trust trusts us", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, Math.sqrt(50 * 30));
+  t.end();
 });
 
-it("Should not cause a loop if the friend and stranger trust each other", () => {
+t.test("Should not cause a loop if the friend and stranger trust each other", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -108,9 +116,10 @@ it("Should not cause a loop if the friend and stranger trust each other", () => 
 
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, Math.sqrt(45 * 35));
+  t.end();
 });
 
-it("Should not cause a loop if two strangers trust each other", () => {
+t.test("Should not cause a loop if two strangers trust each other", (t) => {
   const user = new User();
   const friend = new User();
   const stranger = new User();
@@ -124,9 +133,10 @@ it("Should not cause a loop if two strangers trust each other", () => {
   const trustLevels = user.calculateTrust();
   assert.equal(trustLevels[stranger.id].rating, Math.sqrt(45 * 35));
   assert.equal(trustLevels[stranger2.id].rating, Math.sqrt(45 * Math.sqrt(35 * 15)));
+  t.end();
 });
 
-it("Should not be possible to trust yourself", () => {
+t.test("Should not be possible to trust yourself", (t) => {
   const user = new User();
   const friend = new User();
 
@@ -139,4 +149,5 @@ it("Should not be possible to trust yourself", () => {
 
   const trustLevels = user.calculateTrust();
   assert.equal(Object.keys(trustLevels).length, 1);
+  t.end();
 });
