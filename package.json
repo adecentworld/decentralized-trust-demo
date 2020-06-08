@@ -16,6 +16,8 @@
   "author": "Tim Robinson <tim@timjrobinson.com>",
   "license": "MIT",
   "dependencies": {
+    "@syncfusion/ej2-base": "^18.1.53",
+    "@syncfusion/ej2-inputs": "^18.1.55",
     "benchmark": "^2.1.4",
     "cytoscape": "^3.14.2",
     "koa": "^2.11.0",

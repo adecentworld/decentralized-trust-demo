@@ -88,7 +88,7 @@ class User {
       this.calculatedTrust[userId] = new CalculatedTrust(trust.rating);
     });
     // We've gone as deep as we'd like to calculate, just return this users trust ratings of others. 
-    if (depth == 0) {
+    if (depth <= 1) {
       return this.calculatedTrust;
     }
     Object.entries(this.trustedUsers).forEach(([userId, trust]) => {
