@@ -2,7 +2,7 @@
 .DS_Store
 .nyc_output/
 coverage/
-dist/
+dist/main.js
 node_modules/
 tmp/
 yarn.lock
