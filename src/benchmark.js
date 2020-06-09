@@ -10,7 +10,7 @@ console.log("Creating users...");
 
 const users = {};
 for (let i = 0; i < totalUsers; i++) {
-  let user = new User();
+  let user = new User(i);
   users[i] = user;
 }
 
@@ -27,19 +27,25 @@ for (let j = 0; j < totalEdges; j++) {
   users[userFromNum].trustUser(users[userToNum], rating);
 }
 
-console.log(`Done generating ${totalEdges} edges`);
+console.log(`Done generating ${totalEdges} ratings`);
 
 const bench = new Benchmark('Calculate Trust',
   function() {
     const testUserNum = Math.floor(Math.random() * totalUsers);
     const user = users[testUserNum];
     user.calculateTrust();
-  }
+  } 
 );
 
-Benchmark.invoke(bench, {
+console.log("Running benchmark...");
+console.log();
+
+Benchmark.invoke([bench], {
   'name': 'run',
   'onComplete': function() {
-    console.log("Benchmark complete, stats: ", bench.stats);
+    const stats = bench.stats;
+    console.log("Benchmark complete");
+    console.log('Average time to recalculate trust:', '\x1b[32m', `${Math.round(stats.mean * 100000) / 100}ms`, '\x1b[0m')
+    console.log("All stats (in seconds): ", stats);
   }
 });

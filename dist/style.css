@@ -1,31 +1,40 @@
-#cy {
-  width: 1024px;
+#trust-demo {
+  width: 1000px;
   height: 700px;
   display: block;
-  background-color: #ddd;
+  background-color: #eee;
 }
 
-#controls {
+#trust-controls {
   margin-top: 20px;
 }
 
 .control-group {
-  width: 1024px;
+  width: 100%;
   padding: 10px 0px;
   height: 60px;
 }
 
 .control-group .label {
   float: left;
+  font-size: 1.5rem;
   height: 100%;
-  width: 15%;
-  font-family: Arial, Helvetica, sans-serif;
+  line-height: 100%;
+  width: 25%;
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
   font-weight: bold;
   text-transform: uppercase;
+}
+
+.control-group .slider {
+  width: 70%;
+}
+.control-group .slider li {
+  margin: 0;
 }
 
 .control-group .e-control-wrapper.e-slider-container.e-horizontal {
   float: left;
   height: 100%;
-  width: 80%;
+  width: 70%;
 }

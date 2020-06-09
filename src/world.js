@@ -11,7 +11,6 @@ class World {
     for (let i = 0; i < totalUsers; i++) {
       let user = new User(rn({seed: Math.random()}));
       users[i] = user;
-      console.log("Created user: ", user.id);
     }
 
     console.log(`Done generating ${totalUsers} users`);

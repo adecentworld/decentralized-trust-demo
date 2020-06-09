@@ -21,7 +21,7 @@ let selectedUser = null;
 let cy = null;
 
 const world = new World();
-const canvas = document.getElementById("cy");
+const canvas = document.getElementById("trust-demo");
 
 function createUsersHashMap(users) {
   const usersMap = {};
@@ -254,7 +254,9 @@ const trustDepthSlider = new Slider({
   },
   change: function(settings) {
     trustDepth = settings.value;
-    renderGraph(selectedUser);
+    if (selectedUser != null) {
+      renderGraph(selectedUser);
+    }
   }
 });
 trustDepthSlider.appendTo('#trust-depth-slider');
