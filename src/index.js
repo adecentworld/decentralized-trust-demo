@@ -7,8 +7,8 @@ enableRipple(true);
 const {Slider} = require("@syncfusion/ej2-inputs");
 
 
-const DEFAULT_TOTAL_USERS = 30;
-const DEFAULT_RATINGS_PER_USER = 5;
+const DEFAULT_TOTAL_USERS = 20;
+const DEFAULT_RATINGS_PER_USER = 4;
 const DEFAULT_TRUST_DEPTH = 3;
 
 let totalUsers = DEFAULT_TOTAL_USERS;
@@ -90,8 +90,6 @@ function createGraph(users) {
         'background-color': '#666',
         'label': 'data(id)',
         'font-size': '16px',
-        'font-weight': 'bold',
-        'color': '#' + pad((hue).toString(16), 2).repeat(3)
       }
     },
     {
@@ -168,7 +166,7 @@ function renderGraph(user) {
   // Set main user to center, TRUST_DEPTH + 1 because the outer layer is reserved for unknown strangers
   cy.getElementById(userId)
     .data('trustDegree', trustDepth + 1)
-    .style('background-color', '#4444' + pad(hue.toString(16), 2));
+    .style('background-color', '#4444ff');
 
   renderTrustedUsers(user, trustDepth);
 
