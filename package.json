@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx webpack --silent && node server.js",
     "test": "npx tap",
-    "benchmark": "node benchmark.js"
+    "benchmark": "node src/benchmark.js"
   },
   "keywords": [
     "decentralization",

@@ -55,6 +55,9 @@ class User {
 
   trustUser(user, rating) {
     if (user.id == this.id) throw new TypeError("Cannot trust self");
+    if (rating > MAX_TRUST) throw new TypeError(`Cannot set trust rating greater than ${MAX_TRUST}`)
+    if (rating < MIN_TRUST) throw new TypeError(`Cannot set trust rating less than ${MIN_TRUST}`)
+
     this.trustedUsers[user.id] = new Trust(user, rating);
   }
 
@@ -99,13 +102,30 @@ class User {
         // Ignore trust from this user to us. 
         if (otherId == this.id) return; 
         this.calculatedTrust[otherId] = this.calculatedTrust[otherId] || new CalculatedTrust();
-        let otherRating = Math.sqrt(Math.abs(trust.rating * otherTrust.rating)); 
-        if (otherTrust.rating < 0) otherRating = -otherRating;
+        
+        const otherRating = this.calculateStrangerRating(trust.rating, otherTrust.rating);
         this.calculatedTrust[otherId].addRating(otherRating);
       });
     });
 
     return this.calculatedTrust;
+  }
+
+  /**
+   * Does the math to calculate the trust of a stranger given our mutual
+   * friends rating and the strangers rating.  
+   */
+  calculateStrangerRating(friendRating, friendToStrangerRating) {
+    /* Strangers cannot be trusted more than the mutual friend. 
+    Becuase sqrt(A*B) when B>A is always greater than A we can
+    skip that math calculation and just return our trust of our friend. */
+    if (friendToStrangerRating > friendRating) {
+      return friendRating;
+    }
+    
+    let rating = Math.sqrt(Math.abs(friendRating * friendToStrangerRating)); 
+    if (friendToStrangerRating < 0) rating = -rating;
+    return rating;
   }
 
   /**
