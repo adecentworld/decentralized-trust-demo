@@ -26,6 +26,7 @@ npm start
 
 - `npm start` - Start the trust demo. This will automatically open it in your browser.
 - `npm test` - Run the test suite.
+- `npm run benchmark` - Run the benchmark suite.
 
 ## Algorithm
 
