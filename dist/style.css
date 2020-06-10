@@ -1,6 +1,10 @@
+#trust-demo-container {
+  width: 800px;
+}
+
 #trust-demo {
-  width: 1000px;
-  height: 600px;
+  width: 100%;
+  height: 500px;
   display: block;
   background-color: #050505;
 }
