@@ -1,6 +1,6 @@
 # Decentralized Trust Demo
 
-This is a demo of the Decentralized Trust system [described on A Decentralized World](https://adecentralizedworld.com).
+This is a demo of the Decentralized Trust system [described on A Decentralized World](https://adecentralizedworld.com/2020/06/a-trust-and-moderation-system-for-the-decentralized-web/).
 
 ![trust demo image](trust-demo.png)
 
@@ -30,7 +30,7 @@ npm start
 
 ## Algorithm
 
-The algorithm and vision behind this trust system is [described in this blog post](https://adecentralizedworld.com).
+The algorithm and vision behind this trust system is [described in this blog post](https://adecentralizedworld.com/2020/06/a-trust-and-moderation-system-for-the-decentralized-web/).
 
 The general rules are:
 
