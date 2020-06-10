@@ -44,6 +44,30 @@ The general rules are:
 This algorithms is implemented in [src/models.js](src/models.js), feel free to use this to implement a trust system in your own social network.
 I plan on turning this into a [Scuttlebutt] plugin, and implementing it in most major [Scuttlebutt] clients.
 
+## Benchmarks
+
+Benchmarks run on a 8th Gen i7 Quad Core Laptop running Ubuntu 18.04. Run `npm run benchmark` to perform them on your own system.
+
+### Benchmark of 100,000 users with 1,000,000 ratings
+
+```text
+Average time to recalculate trust (depth=1):  0.01ms
+Average time to recalculate trust (depth=2):  0.09ms
+Average time to recalculate trust (depth=3):  0.73ms
+Average time to recalculate trust (depth=4):  4.79ms
+Average time to recalculate trust (depth=5):  37.07ms
+```
+
+### Benchmark of 1,000,000 users with 10,000,000 ratings
+
+```text
+Average time to recalculate trust (depth=1):  0.01ms
+Average time to recalculate trust (depth=2):  2.27ms
+Average time to recalculate trust (depth=3):  3.93ms
+Average time to recalculate trust (depth=4):  79.06ms
+Average time to recalculate trust (depth=5):  447.77ms
+```
+
 [Scuttlebutt]: https://scuttlebutt.nz
 
 ## License

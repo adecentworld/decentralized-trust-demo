@@ -29,23 +29,27 @@ for (let j = 0; j < totalEdges; j++) {
 
 console.log(`Done generating ${totalEdges} ratings`);
 
-const bench = new Benchmark('Calculate Trust',
-  function() {
-    const testUserNum = Math.floor(Math.random() * totalUsers);
-    const user = users[testUserNum];
-    user.calculateTrust();
-  } 
-);
+function calculateTrust(depth) {
+  const testUserNum = Math.floor(Math.random() * totalUsers);
+  const user = users[testUserNum];
+  user.calculateTrust(depth);
+} 
+
+const benchmarks = [];
+for (var depth = 1; depth <= 5; depth++) {
+  benchmarks.push(new Benchmark(`Calculate Trust (depth=${depth})`, calculateTrust.bind(null, depth)));
+}
 
 console.log("Running benchmark...");
 console.log();
 
-Benchmark.invoke([bench], {
+Benchmark.invoke(benchmarks, {
   'name': 'run',
   'onComplete': function() {
-    const stats = bench.stats;
-    console.log("Benchmark complete");
-    console.log('Average time to recalculate trust:', '\x1b[32m', `${Math.round(stats.mean * 100000) / 100}ms`, '\x1b[0m')
-    console.log("All stats (in seconds): ", stats);
+    console.log(`Benchmark of ${totalUsers} users with ${totalEdges} ratings:`);
+    for (var depth = 1; depth <= 5; depth++) {
+      let stats = benchmarks[depth-1].stats
+      console.log(`Average time to recalculate trust (depth=${depth}):`, '\x1b[32m', `${Math.round(stats.mean * 100000) / 100}ms`, '\x1b[0m')
+    }
   }
 });
