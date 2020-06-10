@@ -46,7 +46,7 @@ I plan on turning this into a [Scuttlebutt] plugin, and implementing it in most 
 
 ## Benchmarks
 
-Benchmarks run on a 8th Gen i7 Quad Core Laptop running Ubuntu 18.04. Run `npm run benchmark` to perform them on your own system.
+These benchmarks were run on an 8th Gen i7 Quad Core Laptop running Ubuntu 18.04. Run `npm run benchmark` to perform them on your own system.
 
 ### Benchmark of 100,000 users with 1,000,000 ratings
 
