@@ -120,7 +120,6 @@ function createGraph(users) {
 
   cy.on('tap', 'node', function(evt){
     var node = evt.target;
-    console.log( 'tapped ' + node.id() );
     const userId = node.id();
     const user = usersMap[userId];
     selectedUser = user;
@@ -181,7 +180,6 @@ function renderTrustedUsers(user, depth) {
  */
 function removeHiddenEdges() {
   removedEdges = cy.edges(':hidden').remove()
-  console.log("Removed edges: ", removedEdges);
 }
 
 
@@ -212,7 +210,6 @@ function renderGraph(user) {
   });
 
   removeHiddenEdges();
-  console.log("Elements length: ", cy.elements().length);
 
   const layout = cy.elements().layout({
     name: 'euler',
