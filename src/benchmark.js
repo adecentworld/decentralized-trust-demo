@@ -1,4 +1,4 @@
-const {User, Trust} = require("./models");
+const {User} = require("./models");
 const Benchmark = require("benchmark");
 
 

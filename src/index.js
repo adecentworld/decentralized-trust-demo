@@ -1,5 +1,4 @@
 const cytoscape = require('cytoscape');
-const models = require("./models");
 const World = require("./world");
 
 const {enableRipple} = require("@syncfusion/ej2-base");
@@ -31,7 +30,7 @@ function createUsersHashMap(users) {
   return usersMap;
 }
 
-function convertUsersToGraphElements(users, rootUser) {
+function convertUsersToGraphElements(users) {
   const graphElements = {
     nodes: [],
     edges: []
@@ -43,7 +42,7 @@ function convertUsersToGraphElements(users, rootUser) {
         trustDegree: Math.floor(Math.random() * 4)
       }
     });
-    Object.entries(user.trustedUsers).forEach(([userId, trust]) => {
+    Object.keys(user.trustedUsers).forEach((userId) => {
       graphElements.edges.push({
         data: { 
           id: user.id + userId, 
@@ -201,7 +200,7 @@ function debounce(callback, time) {
       callback(...args);
     }, time);
   };
-};
+}
 
 async function createWorld(totalUsers, totalRatings, trustDepth) {
   globalUsers = await world.generate(totalUsers, totalRatings);

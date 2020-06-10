@@ -94,7 +94,7 @@ class User {
     if (depth <= 1) {
       return this.calculatedTrust;
     }
-    Object.entries(this.trustedUsers).forEach(([userId, trust]) => {
+    Object.values(this.trustedUsers).forEach((trust) => {
       // Ignore futher trust ratings from people we distrust
       if (trust.rating < 0) return;
       const trustLevels = trust.user.calculateTrust(depth-1);
