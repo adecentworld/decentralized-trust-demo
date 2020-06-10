@@ -14,7 +14,8 @@ const DEFAULT_RATINGS_PER_USER = 4;
 const DEFAULT_TRUST_DEPTH = 3;
 
 let totalUsers = DEFAULT_TOTAL_USERS;
-let totalRatings = DEFAULT_RATINGS_PER_USER * totalUsers;
+let ratingsPerUser = DEFAULT_RATINGS_PER_USER
+let totalRatings = ratingsPerUser * totalUsers;
 let trustDepth = DEFAULT_TRUST_DEPTH;
 
 let globalUsers = null;
@@ -249,6 +250,7 @@ const usersSlider = new Slider({
   },
   change: function(settings) {
     totalUsers = settings.value;
+    totalRatings = ratingsPerUser * totalUsers;
     updateWorld(totalUsers, totalRatings, trustDepth);
   }
 });
@@ -264,7 +266,8 @@ const ratingsSlider = new Slider({
     smallStep: 1
   },
   change: function(settings) {
-    totalRatings = settings.value * totalUsers;
+    ratingsPerUser = settings.value;
+    totalRatings = ratingsPerUser * totalUsers;
     updateWorld(totalUsers, totalRatings, trustDepth);
   }
 });

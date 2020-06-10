@@ -20,6 +20,7 @@ class World {
       let userFromNum = Math.floor(Math.random() * totalUsers);
       let userToNum = Math.floor(Math.random() * totalUsers);
       if (userFromNum == userToNum) {
+        j--;
         continue;
       }
       let rating = Math.floor(Math.random() * 200) - 100;
